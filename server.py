@@ -1,16 +1,39 @@
 import socket
-
+import threading
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((socket.gethostname(), 1234))
-s.listen(5)
 format = "utf-8"
+
+connlist = []
+
+
+class Client(threading.Thread):
+    def __init__(self, conn):
+        threading.Thread.__init__(self)
+        self.conn = conn
+
+    def run(self):
+        handle_client(self.conn)
+
+
+def handle_client(conn):
+    while True:
+        msg = conn.recv(5)
+        if len(msg):
+            msg = msg.decode()
+            for i in connlist:
+                if i != conn:
+                    i.send(bytes(msg, "utf-8"))
 
 
 def recv_clients():
+    s.listen()
+    client_size = 0
     while True:
         conn, addr = s.accept()
-        conn.send(bytes("Hello man", format))
-        print(conn)
+        connlist.append(conn)
+        thread = Client(conn)
+        thread.start()
 
 
 recv_clients()
