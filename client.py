@@ -7,3 +7,5 @@ while True:
     msg = s.recv(100)
     msg = msg.decode(format)
     print(msg)
+
+
