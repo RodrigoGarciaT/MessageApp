@@ -3,7 +3,7 @@ import threading
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((socket.gethostname(), 1234))
 format = "utf-8"
-
+HeaderSize = 10
 connlist = []
 
 
@@ -18,9 +18,13 @@ class Client(threading.Thread):
 
 def handle_client(conn):
     global format
+    global HeaderSize
     while True:
-        msg = conn.recv(1024)
+        msg = conn.recv(HeaderSize)
         if len(msg):
+            msg_length = int(msg[:HeaderSize])
+            msg += conn.recv(msg_length)
+            print(msg.decode())
             msg = msg.decode()
             for i in connlist:
                 if i != conn:
@@ -29,7 +33,6 @@ def handle_client(conn):
 
 def recv_clients():
     s.listen()
-    client_size = 0
     while True:
         conn, addr = s.accept()
         connlist.append(conn)
