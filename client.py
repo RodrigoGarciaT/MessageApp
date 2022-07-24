@@ -5,9 +5,7 @@ format = "utf-8"
 
 while True:
     msg = input(">you ")
-    server.send(bytes(msg, "utf-8"))
-    msg = server.recv(5)
+    server.send(bytes(msg, format))
+    msg = server.recv(1024)
     msg = msg.decode()
     print(msg)
-
-

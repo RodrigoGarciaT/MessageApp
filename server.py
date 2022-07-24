@@ -17,13 +17,14 @@ class Client(threading.Thread):
 
 
 def handle_client(conn):
+    global format
     while True:
-        msg = conn.recv(5)
+        msg = conn.recv(1024)
         if len(msg):
             msg = msg.decode()
             for i in connlist:
                 if i != conn:
-                    i.send(bytes(msg, "utf-8"))
+                    i.send(bytes(msg, format))
 
 
 def recv_clients():
