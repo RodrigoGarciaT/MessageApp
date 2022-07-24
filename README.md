@@ -1,2 +1,2 @@
 # MessageApp
-Python messaging app that uses sockets to connect many clients together
+Python messaging app that uses sockets and multithreading to connect many clients together
